@@ -18,10 +18,10 @@
 package leaflet
 
 import (
+	"github.com/whosonfirst/go-bindata-assetfs"
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/whosonfirst/go-bindata-assetfs"
 	"io"
 	"io/ioutil"
 	"os"
@@ -393,19 +393,19 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"static/javascript/leaflet-hash.js":        staticJavascriptLeafletHashJs,
-	"static/javascript/leaflet-src.esm.js":     staticJavascriptLeafletSrcEsmJs,
+	"static/javascript/leaflet-hash.js": staticJavascriptLeafletHashJs,
+	"static/javascript/leaflet-src.esm.js": staticJavascriptLeafletSrcEsmJs,
 	"static/javascript/leaflet-src.esm.js.map": staticJavascriptLeafletSrcEsmJsMap,
-	"static/javascript/leaflet-src.js":         staticJavascriptLeafletSrcJs,
-	"static/javascript/leaflet-src.js.map":     staticJavascriptLeafletSrcJsMap,
-	"static/javascript/leaflet.js":             staticJavascriptLeafletJs,
-	"static/javascript/leaflet.js.map":         staticJavascriptLeafletJsMap,
-	"static/css/leaflet.css":                   staticCssLeafletCss,
-	"static/images/layers-2x.png":              staticImagesLayers2xPng,
-	"static/images/layers.png":                 staticImagesLayersPng,
-	"static/images/marker-icon-2x.png":         staticImagesMarkerIcon2xPng,
-	"static/images/marker-icon.png":            staticImagesMarkerIconPng,
-	"static/images/marker-shadow.png":          staticImagesMarkerShadowPng,
+	"static/javascript/leaflet-src.js": staticJavascriptLeafletSrcJs,
+	"static/javascript/leaflet-src.js.map": staticJavascriptLeafletSrcJsMap,
+	"static/javascript/leaflet.js": staticJavascriptLeafletJs,
+	"static/javascript/leaflet.js.map": staticJavascriptLeafletJsMap,
+	"static/css/leaflet.css": staticCssLeafletCss,
+	"static/images/layers-2x.png": staticImagesLayers2xPng,
+	"static/images/layers.png": staticImagesLayersPng,
+	"static/images/marker-icon-2x.png": staticImagesMarkerIcon2xPng,
+	"static/images/marker-icon.png": staticImagesMarkerIconPng,
+	"static/images/marker-shadow.png": staticImagesMarkerShadowPng,
 }
 
 // AssetDir returns the file names below a certain
@@ -447,27 +447,26 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
-
 var _bintree = &bintree{nil, map[string]*bintree{
 	"static": &bintree{nil, map[string]*bintree{
 		"css": &bintree{nil, map[string]*bintree{
 			"leaflet.css": &bintree{staticCssLeafletCss, map[string]*bintree{}},
 		}},
 		"images": &bintree{nil, map[string]*bintree{
-			"layers-2x.png":      &bintree{staticImagesLayers2xPng, map[string]*bintree{}},
-			"layers.png":         &bintree{staticImagesLayersPng, map[string]*bintree{}},
+			"layers-2x.png": &bintree{staticImagesLayers2xPng, map[string]*bintree{}},
+			"layers.png": &bintree{staticImagesLayersPng, map[string]*bintree{}},
 			"marker-icon-2x.png": &bintree{staticImagesMarkerIcon2xPng, map[string]*bintree{}},
-			"marker-icon.png":    &bintree{staticImagesMarkerIconPng, map[string]*bintree{}},
-			"marker-shadow.png":  &bintree{staticImagesMarkerShadowPng, map[string]*bintree{}},
+			"marker-icon.png": &bintree{staticImagesMarkerIconPng, map[string]*bintree{}},
+			"marker-shadow.png": &bintree{staticImagesMarkerShadowPng, map[string]*bintree{}},
 		}},
 		"javascript": &bintree{nil, map[string]*bintree{
-			"leaflet-hash.js":        &bintree{staticJavascriptLeafletHashJs, map[string]*bintree{}},
-			"leaflet-src.esm.js":     &bintree{staticJavascriptLeafletSrcEsmJs, map[string]*bintree{}},
+			"leaflet-hash.js": &bintree{staticJavascriptLeafletHashJs, map[string]*bintree{}},
+			"leaflet-src.esm.js": &bintree{staticJavascriptLeafletSrcEsmJs, map[string]*bintree{}},
 			"leaflet-src.esm.js.map": &bintree{staticJavascriptLeafletSrcEsmJsMap, map[string]*bintree{}},
-			"leaflet-src.js":         &bintree{staticJavascriptLeafletSrcJs, map[string]*bintree{}},
-			"leaflet-src.js.map":     &bintree{staticJavascriptLeafletSrcJsMap, map[string]*bintree{}},
-			"leaflet.js":             &bintree{staticJavascriptLeafletJs, map[string]*bintree{}},
-			"leaflet.js.map":         &bintree{staticJavascriptLeafletJsMap, map[string]*bintree{}},
+			"leaflet-src.js": &bintree{staticJavascriptLeafletSrcJs, map[string]*bintree{}},
+			"leaflet-src.js.map": &bintree{staticJavascriptLeafletSrcJsMap, map[string]*bintree{}},
+			"leaflet.js": &bintree{staticJavascriptLeafletJs, map[string]*bintree{}},
+			"leaflet.js.map": &bintree{staticJavascriptLeafletJsMap, map[string]*bintree{}},
 		}},
 	}},
 }}
@@ -518,6 +517,7 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
+
 
 func assetFS() *assetfs.AssetFS {
 	assetInfo := func(path string) (os.FileInfo, error) {
