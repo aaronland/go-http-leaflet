@@ -56,7 +56,7 @@
 
 	</style>
     </head>
-    <body>
+    <body data-tile-url="{{ .TileURL }}">
 	<div id="map"></div>
 	<span id="current-template">....</span>
 	<span id="current-tile"></span>	
@@ -120,6 +120,14 @@
 	 set_layer(url_template);
      };
 
+     var tile_url = document.body.getAttribute("data-tile-url");
+
+     if (tile_url){
+	 tile_url = decodeURI(tile_url);	// necessary because of Go's escaping stuff
+	 set_layer(tile_url);
+     }
+	 
+     
     </script>
 </html>
 {{ end }}

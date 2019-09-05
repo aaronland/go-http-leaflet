@@ -21,7 +21,7 @@ func DefaultLeafletOptions() *LeafletOptions {
 		},
 		JS: []string{
 			"/javascript/leaflet.js",
-			"javascript/leaflet.js.map",
+			"/javascript/leaflet-hash.js",
 		},
 	}
 

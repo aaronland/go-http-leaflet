@@ -11,7 +11,11 @@ import (
 	"net/http"
 )
 
-func MapHandler(templates *template.Template) (http.Handler, error) {
+type MapVars struct {
+	TileURL string
+}
+
+func MapHandler(templates *template.Template, map_vars *MapVars) (http.Handler, error) {
 
 	t := templates.Lookup("map")
 
@@ -21,7 +25,7 @@ func MapHandler(templates *template.Template) (http.Handler, error) {
 
 	fn := func(rsp http.ResponseWriter, req *http.Request) {
 
-		err := t.Execute(rsp, nil)
+		err := t.Execute(rsp, map_vars)
 
 		if err != nil {
 			http.Error(rsp, err.Error(), http.StatusInternalServerError)
@@ -35,11 +39,10 @@ func MapHandler(templates *template.Template) (http.Handler, error) {
 
 func main() {
 
-	flag.Parse()
-
 	host := flag.String("host", "localhost", "...")
 	port := flag.Int("port", 8080, "...")
 
+	tile_url := flag.String("tile-url", "", "A valid Leaflet layer tile URL")
 	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	flag.Parse()
@@ -74,13 +77,23 @@ func main() {
 		}
 	}
 
+	map_vars := new(MapVars)
+
+	if *tile_url != "" {
+		map_vars.TileURL = *tile_url
+	}
+
 	mux := http.NewServeMux()
 
-	map_handler, err := MapHandler(t)
+	map_handler, err := MapHandler(t, map_vars)
 
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	leaflet_opts := leaflet.DefaultLeafletOptions()
+
+	map_handler = leaflet.AppendResourcesHandler(map_handler, leaflet_opts)
 
 	mux.Handle("/", map_handler)
 
