@@ -1,0 +1,125 @@
+{{ define "map" }}
+<html>
+    <head>
+	<title>debug</title>
+	<style type="text/css">
+	 body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.leaflet-tile {
+	border: 1px solid blue;
+	background-color:pink;
+}
+
+#map {
+	width:100%;
+	height:80vh;
+}
+
+#current-template {
+	font-family:monospace;
+	display:block;
+	text-align:center;
+	margin-top:.25rem;
+}
+
+#current-tile {
+	font-family:monospace;
+	display:block;
+	text-align:center;
+	margin-top:.5rem;
+	color:#666;
+}
+
+#controls {
+	padding:.5rem;
+	width: 80vw;
+	margin: 0 auto;
+	margin-top:2rem;		
+}
+
+#controls input {
+	width: 80vw;
+	font-size:1.5rem;
+	margin-top:.5rem;	
+	margin-bottom:.5rem;
+}
+
+#controls button {
+	font-size:.8rem;
+	border:solid thin;
+	padding: .6rem;
+	margin:0px !important;
+}
+
+	</style>
+    </head>
+    <body>
+	<div id="map"></div>
+	<span id="current-template">....</span>
+	<span id="current-tile"></span>	
+	<div id="controls">
+	    <input type="text" id="url_template" name="url_template" value="" placeholder="Enter an alternate URL template here" />
+	    <button type="submit" id="update">Update</button>
+	</div>
+    </body>
+    <script>
+
+     var map;
+     var layer;
+     
+     map = L.map("map").setView([37.61799, -122.370943], 13);
+     new L.Hash(map);
+
+     map.on("click", function(e){
+
+	 var ll = e.latlng;
+	 var zoom = map.getZoom();
+
+	 var coords = map.project(ll, zoom).divideBy(256).floor();
+	 coords.z = zoom;
+
+	 var tile_url = layer.getTileUrl(coords);
+
+	 var current_tile = document.getElementById("current-tile");
+
+	 var link = document.createElement("a");
+	 link.setAttribute("href", tile_url);
+	 link.setAttribute("target", "_tile");
+	 link.appendChild(document.createTextNode(tile_url));
+	 
+	 current_tile.innerHTML = "";
+	 current_tile.appendChild(link);
+     });
+
+     var button = document.getElementById("update");
+     var template = document.getElementById("url_template");
+     var current = document.getElementById("current-template");
+     
+     var layer_args = {
+	 minZoom: 1,
+	 maxZoom: 20,
+     };
+
+     var set_layer = function(url_template){
+
+	 if (layer){
+	     map.removeLayer(layer);
+	 }
+	 
+	 layer = L.tileLayer(url_template, layer_args);
+	 layer.addTo(map);
+	 
+	 current.innerText = url_template;
+     };
+     
+     button.onclick = function(){
+	 url_template = template.value;
+	 set_layer(url_template);
+     };
+
+    </script>
+</html>
+{{ end }}
