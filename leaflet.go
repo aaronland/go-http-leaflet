@@ -48,7 +48,7 @@ func AppendResourcesHandlerWithPrefix(next http.Handler, opts *LeafletOptions, p
 		}
 	}
 
-	ext_opts := &rewriteAppendResourcesOptions{
+	ext_opts := &rewrite.AppendResourcesOptions{
 		JavaScript:  js,
 		Stylesheets: css,
 	}
