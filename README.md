@@ -9,3 +9,4 @@ This is work in progress.
 ## See also
 
 * https://leafletjs.com
+* https://github.com/Leaflet/Leaflet.fullscreen
