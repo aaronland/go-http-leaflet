@@ -3,7 +3,7 @@ package leaflet
 import (
 	"github.com/aaronland/go-http-rewrite"
 	"github.com/aaronland/go-http-leaflet/static"	
-	"log"
+	_ "log"
 	"fmt"
 	"io/fs"
 	"net/http"
@@ -116,7 +116,8 @@ func AppendAssetHandlersWithPrefix(mux *http.ServeMux, prefix string) error {
 			path = fmt.Sprintf("/%s", path)
 		}
 
-		log.Println("APPEND", path)
+		// log.Println("APPEND", path)
+		
 		mux.Handle(path, asset_handler)
 		return nil
 	}
