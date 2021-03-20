@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-leaflet"
-	"github.com/aaronland/go-http-leaflet/assets/templates"
+	"github.com/aaronland/go-http-leaflet/templates/html"		
 	"html/template"
 	"log"
 	"net/http"
@@ -43,38 +43,13 @@ func main() {
 	port := flag.Int("port", 8080, "...")
 
 	tile_url := flag.String("tile-url", "", "A valid Leaflet layer tile URL")
-	path_templates := flag.String("templates", "", "An optional string for local templates. This is anything that can be read by the 'templates.ParseGlob' method.")
 
 	flag.Parse()
 
-	t := template.New("example")
+	t, err := template.ParseFS(html.FS, "*.html")
 
-	var err error
-
-	if *path_templates != "" {
-
-		t, err = t.ParseGlob(*path_templates)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-	} else {
-
-		for _, name := range templates.AssetNames() {
-
-			body, err := templates.Asset(name)
-
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			t, err = t.Parse(string(body))
-
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
+	if err != nil {
+		log.Fatalf("Failed to parse templates, %v", err)
 	}
 
 	map_vars := new(MapVars)
@@ -88,7 +63,7 @@ func main() {
 	map_handler, err := MapHandler(t, map_vars)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to create map handler, %v", err)
 	}
 
 	leaflet_opts := leaflet.DefaultLeafletOptions()
@@ -100,7 +75,7 @@ func main() {
 	err = leaflet.AppendAssetHandlers(mux)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to append Leaflet asset handler, %v", err)
 	}
 
 	endpoint := fmt.Sprintf("%s:%d", *host, *port)
@@ -109,7 +84,7 @@ func main() {
 	err = http.ListenAndServe(endpoint, mux)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to serve requests, %v", err)
 	}
 
 }
