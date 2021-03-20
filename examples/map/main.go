@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/aaronland/go-http-leaflet"
-	"github.com/aaronland/go-http-leaflet/templates/html"		
+	"github.com/aaronland/go-http-leaflet/templates/html"
 	"html/template"
 	"log"
 	"net/http"
