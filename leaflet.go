@@ -49,7 +49,7 @@ func DefaultLeafletOptions() *LeafletOptions {
 	return opts
 }
 
-// AppendResourcesHandler will rewrite any HTML produced by previous handler to include the necessary markup to load Leaflet JavaScript files and related assets.
+// AppendResourcesHandler will rewrite any HTML produced by previous handler to include the necessary markup to load Leaflet JavaScript and CSS files and related assets.
 func AppendResourcesHandler(next http.Handler, opts *LeafletOptions) http.Handler {
 	return AppendResourcesHandlerWithPrefix(next, opts, "")
 }
@@ -110,12 +110,12 @@ func AssetsHandlerWithPrefix(prefix string) (http.Handler, error) {
 	return rewrite_handler, nil
 }
 
-// Append all the files in the net/http FS instance containing the embedded Protomaps assets to an *http.ServeMux instance.
+// Append all the files in the net/http FS instance containing the embedded Leaflet assets to an *http.ServeMux instance.
 func AppendAssetHandlers(mux *http.ServeMux) error {
 	return AppendAssetHandlersWithPrefix(mux, "")
 }
 
-// Append all the files in the net/http FS instance containing the embedded Protomaps assets to an *http.ServeMux instance ensuring that all URLs are prepended with prefix.
+// Append all the files in the net/http FS instance containing the embedded Leaflet assets to an *http.ServeMux instance ensuring that all URLs are prepended with prefix.
 func AppendAssetHandlersWithPrefix(mux *http.ServeMux, prefix string) error {
 
 	asset_handler, err := AssetsHandlerWithPrefix(prefix)
