@@ -12,10 +12,14 @@
 		 border: 1px solid blue;
 		 background-color:pink;
 	 }
-	 
+
+	 .leaflet-draw-toolbar a {
+		 background-size: 300px 30px !important;
+	 }
+
 	 #map {
 		 width:100%;
-		 height:80vh;
+		 height:70vh;
 	 }
 	 
 	 #current-template {
@@ -56,9 +60,9 @@
 	 
 	</style>
     </head>
-    <body data-tile-url="{{ .TileURL }}">
+    <body data-tile-url="{{ .TileURL }}" data-enable-hash="{{ .EnableHash }}" data-enable-fullscreen="{{ .EnableFullscreen }}" data-enable-draw="{{ .EnableDraw }}">
 	<div id="map"></div>
-	<span id="current-template">....</span>
+	<span id="current-template"></span>
 	<span id="current-tile"></span>	
 	<div id="controls">
 	    <input type="text" id="url_template" name="url_template" value="" placeholder="Enter an alternate URL template here" />
@@ -67,20 +71,84 @@
     </body>
     <script>
      
-     var map;
-     var layer;
-     
-     map = L.map("map").setView([37.61799, -122.370943], 13);
-     new L.Hash(map);
+	var layer;
 
-     map.addControl(new L.Control.Fullscreen({
-	 title: {
-             'false': 'View Fullscreen',
-             'true': 'Exit Fullscreen'
-	 }
-     }));
-     
-     map.on("click", function(e){
+	var enable_hash = document.body.getAttribute("data-enable-hash");
+	var enable_fullscreen = document.body.getAttribute("data-enable-fullscreen");
+	var enable_draw = document.body.getAttribute("data-enable-draw");	
+
+	var map = L.map("map");
+	map.setView([37.61799, -122.370943], 13);
+
+	if (enable_hash == "true"){
+		new L.Hash(map);
+	}
+
+	if (enable_fullscreen == "true"){
+
+		map.addControl(new L.Control.Fullscreen({
+			title: {
+		        	'false': 'View Fullscreen',
+             			'true': 'Exit Fullscreen'
+	 		}
+     		}));
+	}
+
+	if (enable_draw == "true"){
+
+	var dump_featurecollection = function(fc){
+	console.log(fc);
+	};
+	
+    var drawnItems = new L.FeatureGroup();
+    
+    map.addLayer(drawnItems);
+    
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+    
+    map.addControl(drawControl);
+
+    map.on(L.Draw.Event.CREATED, function (e){
+	
+        var type = e.layerType;
+        var layer = e.layer;
+
+        if (type === 'marker') {
+            layer.bindPopup('A popup!');
+        }
+	
+        drawnItems.addLayer(layer);
+
+	var fc = drawnItems.toGeoJSON();
+	dump_featurecollection(fc);
+    });
+
+    map.on(L.Draw.Event.EDITED, function (e){
+	
+	var fc = drawnItems.toGeoJSON();
+	dump_featurecollection(fc);
+	
+    });
+
+    map.on(L.Draw.Event.DELETED, function (e){
+
+        var type = e.layerType;
+        var layer = e.layer;
+
+        drawnItems.removeLayer(layer);
+	
+	var fc = drawnItems.toGeoJSON();
+	dump_featurecollection(fc);
+	
+    });
+	
+	}
+	
+	map.on("click", function(e){
 
 	 var ll = e.latlng;
 	 var zoom = map.getZoom();

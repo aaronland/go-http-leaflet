@@ -15,6 +15,7 @@ type ExampleVars struct {
 	TileURL          string
 	EnableHash       bool
 	EnableFullscreen bool
+	EnableDraw       bool
 }
 
 func ExampleHandler(templates *template.Template, example_vars *ExampleVars) (http.Handler, error) {
@@ -41,14 +42,14 @@ func ExampleHandler(templates *template.Template, example_vars *ExampleVars) (ht
 
 func main() {
 
-	host := flag.String("host", "localhost", "...")
-	port := flag.Int("port", 8080, "...")
+	host := flag.String("host", "localhost", "The host name to listen for requests on.")
+	port := flag.Int("port", 8080, "The host port to listen for requests on.")
 
 	tile_url := flag.String("tile-url", "", "A valid Leaflet layer tile URL")
 
 	enable_hash := flag.Bool("enable-hash", false, "Enable the Leaflet Hash plugin")
 	enable_fullscreen := flag.Bool("enable-fullscreen", false, "Enable the Leaflet Fullscreen plugin")
-	// enable_draw := flag.Bool("enable-draw", false, "Enable the Leaflet Draw plugin")
+	enable_draw := flag.Bool("enable-draw", false, "Enable the Leaflet Draw plugin")
 
 	flag.Parse()
 
@@ -76,10 +77,15 @@ func main() {
 		leaflet_opts.EnableFullscreen()
 	}
 
+	if *enable_draw {
+		leaflet_opts.EnableDraw()
+	}
+
 	example_vars := &ExampleVars{
 		TileURL:          *tile_url,
 		EnableHash:       *enable_hash,
 		EnableFullscreen: *enable_fullscreen,
+		EnableDraw:       *enable_draw,
 	}
 
 	example_handler, err := ExampleHandler(t, example_vars)
