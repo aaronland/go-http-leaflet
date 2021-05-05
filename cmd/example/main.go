@@ -67,7 +67,9 @@ func main() {
 	}
 
 	leaflet_opts := leaflet.DefaultLeafletOptions()
-
+	leaflet_opts.EnableHash()
+	leaflet_opts.EnableFullscreen()
+	
 	map_handler = leaflet.AppendResourcesHandler(map_handler, leaflet_opts)
 
 	mux.Handle("/", map_handler)

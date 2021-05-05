@@ -16,17 +16,33 @@ type LeafletOptions struct {
 	CSS []string
 }
 
+func (opts *LeafletOptions) EnableFullscreen() {
+	opts.CSS = append(opts.CSS, "/css/leaflet.fullscreen.css")
+	opts.JS = append(opts.JS, "/javascript/leaflet.fullscreen.min.js")
+}
+
+func (opts *LeafletOptions) EnableHash() {
+	opts.JS = append(opts.JS, "/javascript/leaflet-hash.js")
+}
+
+func (opts *LeafletOptions) EnableDraw() {
+	opts.CSS = append(opts.CSS, "/css/leaflet.draw.css")
+	opts.JS = append(opts.JS, "/javascript/leaflet.draw.js")
+}
+
 func DefaultLeafletOptions() *LeafletOptions {
 
 	opts := &LeafletOptions{
 		CSS: []string{
 			"/css/leaflet.css",
-			"/css/leaflet.fullscreen.css",
+			// "/css/leaflet.fullscreen.css",
+			// "/css/leaflet.draw.css",			
 		},
 		JS: []string{
 			"/javascript/leaflet.js",
-			"/javascript/leaflet.fullscreen.min.js",
-			"/javascript/leaflet-hash.js",
+			// "/javascript/leaflet.fullscreen.min.js",
+			// "/javascript/leaflet-hash.js",
+			// "/javascript/leaflet.draw.js",			
 		},
 	}
 

@@ -4,7 +4,7 @@ Go HTTP middleware for Leaflet (1.7.1)
 
 ## Important
 
-Documentation to follow. For now, please consult [examples/map/main.go](examples/map/main.go).
+Documentation to follow. For now, please consult [cmd/example/main.go](cmd/example/main.go).
 
 ## See also
 
