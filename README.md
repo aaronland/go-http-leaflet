@@ -1,10 +1,10 @@
 # go-http-leaflet
 
-Go HTTP middleware for Leaflet (1.7.1)
+`go-http-leaflet` is an HTTP middleware package for including Leaflet.js (v1.7.1) assets in web applications.
 
-## Important
+## Documentation
 
-Documentation to follow. For now, please consult [cmd/example/main.go](cmd/example/main.go).
+[![Go Reference](https://pkg.go.dev/badge/github.com/aaronland/go-http-leaflet.svg)](https://pkg.go.dev/github.com/aaronland/go-http-leaflet)
 
 ## See also
 

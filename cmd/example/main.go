@@ -11,21 +11,23 @@ import (
 	"net/http"
 )
 
-type MapVars struct {
-	TileURL string
+type ExampleVars struct {
+	TileURL          string
+	EnableHash       bool
+	EnableFullscreen bool
 }
 
-func MapHandler(templates *template.Template, map_vars *MapVars) (http.Handler, error) {
+func ExampleHandler(templates *template.Template, example_vars *ExampleVars) (http.Handler, error) {
 
-	t := templates.Lookup("map")
+	t := templates.Lookup("example")
 
 	if t == nil {
-		return nil, errors.New("Missing 'map' template")
+		return nil, errors.New("Missing 'example' template")
 	}
 
 	fn := func(rsp http.ResponseWriter, req *http.Request) {
 
-		err := t.Execute(rsp, map_vars)
+		err := t.Execute(rsp, example_vars)
 
 		if err != nil {
 			http.Error(rsp, err.Error(), http.StatusInternalServerError)
@@ -44,6 +46,10 @@ func main() {
 
 	tile_url := flag.String("tile-url", "", "A valid Leaflet layer tile URL")
 
+	enable_hash := flag.Bool("enable-hash", false, "Enable the Leaflet Hash plugin")
+	enable_fullscreen := flag.Bool("enable-fullscreen", false, "Enable the Leaflet Fullscreen plugin")
+	// enable_draw := flag.Bool("enable-draw", false, "Enable the Leaflet Draw plugin")
+
 	flag.Parse()
 
 	t, err := template.ParseFS(html.FS, "*.html")
@@ -52,33 +58,39 @@ func main() {
 		log.Fatalf("Failed to parse templates, %v", err)
 	}
 
-	map_vars := new(MapVars)
-
-	if *tile_url != "" {
-		map_vars.TileURL = *tile_url
-	}
-
 	mux := http.NewServeMux()
-
-	map_handler, err := MapHandler(t, map_vars)
-
-	if err != nil {
-		log.Fatalf("Failed to create map handler, %v", err)
-	}
-
-	leaflet_opts := leaflet.DefaultLeafletOptions()
-	leaflet_opts.EnableHash()
-	leaflet_opts.EnableFullscreen()
-	
-	map_handler = leaflet.AppendResourcesHandler(map_handler, leaflet_opts)
-
-	mux.Handle("/", map_handler)
 
 	err = leaflet.AppendAssetHandlers(mux)
 
 	if err != nil {
-		log.Fatalf("Failed to append Leaflet asset handler, %v", err)
+		log.Fatalf("Failed to append Leaflet assets handler, %v", err)
 	}
+
+	leaflet_opts := leaflet.DefaultLeafletOptions()
+
+	if *enable_hash {
+		leaflet_opts.EnableHash()
+	}
+
+	if *enable_fullscreen {
+		leaflet_opts.EnableFullscreen()
+	}
+
+	example_vars := &ExampleVars{
+		TileURL:          *tile_url,
+		EnableHash:       *enable_hash,
+		EnableFullscreen: *enable_fullscreen,
+	}
+
+	example_handler, err := ExampleHandler(t, example_vars)
+
+	if err != nil {
+		log.Fatalf("Failed to create example handler, %v", err)
+	}
+
+	example_handler = leaflet.AppendResourcesHandler(example_handler, leaflet_opts)
+
+	mux.Handle("/", example_handler)
 
 	endpoint := fmt.Sprintf("%s:%d", *host, *port)
 	log.Printf("Listening for requests on %s\n", endpoint)
