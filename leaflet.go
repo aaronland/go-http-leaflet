@@ -13,8 +13,9 @@ import (
 
 // LeafletOptions provides a list of JavaScript and CSS link to include with HTML output.
 type LeafletOptions struct {
-	JS  []string
-	CSS []string
+	JS             []string
+	CSS            []string
+	DataAttributes map[string]string
 }
 
 // Append the Javascript and CSS URLs for the Leaflet.Fullscreen plugin.
@@ -44,6 +45,7 @@ func DefaultLeafletOptions() *LeafletOptions {
 		JS: []string{
 			"/javascript/leaflet.js",
 		},
+		DataAttributes: make(map[string]string),
 	}
 
 	return opts
@@ -72,8 +74,9 @@ func AppendResourcesHandlerWithPrefix(next http.Handler, opts *LeafletOptions, p
 	}
 
 	ext_opts := &rewrite.AppendResourcesOptions{
-		JavaScript:  js,
-		Stylesheets: css,
+		JavaScript:     js,
+		Stylesheets:    css,
+		DataAttributes: opts.DataAttributes,
 	}
 
 	return rewrite.AppendResourcesHandler(next, ext_opts)
