@@ -6,11 +6,13 @@
 	 body {
 		 margin: 0px;
 		 padding: 0px;
+		 background-color: #fff;		 
 	 }	 
 
 	 .leaflet-tile {
 		 border: 1px solid blue;
-		 background-color:pink;
+		 background-color: #5d5d5d;		 
+		 //background-color:pink;
 	 }
 
 	 .leaflet-draw-toolbar a {
@@ -94,65 +96,76 @@
      		}));
 	}
 
-	if (enable_draw == "true"){
+     // https://github.com/geoman-io/leaflet-geoman/
+     
+     if (enable_draw == "true"){
 
 	var dump_featurecollection = function(fc){
-	console.log(fc);
+	    console.log(fc);
 	};
-	
-    var drawnItems = new L.FeatureGroup();
-    
-    map.addLayer(drawnItems);
-    
-    var drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems
-        }
-    });
-    
-    map.addControl(drawControl);
 
-    map.on(L.Draw.Event.CREATED, function (e){
-	
-        var type = e.layerType;
-        var layer = e.layer;
+	 var on_update = function(){
+	     var feature_group = map.pm.getGeomanLayers(true);
+	     var feature_collection = feature_group.toGeoJSON();
+	     dump_featurecollection(feature_collection);	     
+	 };
+	 
+	 map.pm.addControls({  
+	     position: 'topleft',  
+	 });
+	 
+	 map.on("pm:drawend", function(e){
+	     console.log("draw end");
+	     on_update();
+	 });
+	 
+	 map.on('pm:remove', function (e) {
+	     console.log("remove");	     
+	     on_update();	     
+	 });
 
-        if (type === 'marker') {
-            layer.bindPopup('A popup!');
-        }
-	
-        drawnItems.addLayer(layer);
+	 // This does not appear to capture drag or edit-vertex events
+	 // Not sure what's up with that...
+	 
+	 map.on('pm:globaleditmodetoggled', (e) => {
+	     console.log("remove");	     
+	     on_update();	     
+	 });
+	 
+	 // https://github.com/geoman-io/leaflet-geoman/blob/develop/demo/demo.js#L106
+	 
+	 const example_geojson = {
+	     "type": "FeatureCollection",
+	     "features": [
+		 {
+		     "type": "Feature",
+		     "properties": {},
+		     "geometry": {
+			 "type": "Point",
+			 "coordinates": [ -122.445374, 37.755302 ]
+		     }
+		 }
+	     ]
+	 };
 
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-    });
+	 const geojson_layer = L.geoJson(example_geojson, {
+	     pointToLayer: (feature, latlng) => {
+		 if (feature.properties.customGeometry) {
+		     return new L.Circle(latlng, feature.properties.customGeometry.radius);
+		 } else {
+		     return new L.Marker(latlng);
+		 }
+	     },
+	 });
 
-    map.on(L.Draw.Event.EDITED, function (e){
-	
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-	
-    });
-
-    map.on(L.Draw.Event.DELETED, function (e){
-
-        var type = e.layerType;
-        var layer = e.layer;
-
-        drawnItems.removeLayer(layer);
-	
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-	
-    });
-	
-	}
-	
-	map.on("click", function(e){
-
+	 geojson_layer.addTo(map);
+     }
+     
+     map.on("click", function(e){
+	 
 	 var ll = e.latlng;
 	 var zoom = map.getZoom();
-
+	 
 	 var coords = map.project(ll, zoom).divideBy(256).floor();
 	 coords.z = zoom;
 
