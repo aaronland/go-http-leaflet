@@ -96,59 +96,6 @@
      		}));
 	}
 
-	if (enable_draw == "true"){
-
-	var dump_featurecollection = function(fc){
-	console.log(fc);
-	};
-	
-    var drawnItems = new L.FeatureGroup();
-    
-    map.addLayer(drawnItems);
-    
-    var drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems
-        }
-    });
-    
-    map.addControl(drawControl);
-
-    map.on(L.Draw.Event.CREATED, function (e){
-	
-        var type = e.layerType;
-        var layer = e.layer;
-
-        if (type === 'marker') {
-            layer.bindPopup('A popup!');
-        }
-	
-        drawnItems.addLayer(layer);
-
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-    });
-
-    map.on(L.Draw.Event.EDITED, function (e){
-	
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-	
-    });
-
-    map.on(L.Draw.Event.DELETED, function (e){
-
-        var type = e.layerType;
-        var layer = e.layer;
-
-        drawnItems.removeLayer(layer);
-	
-	var fc = drawnItems.toGeoJSON();
-	dump_featurecollection(fc);
-	
-    });
-	
-	}
 	
 	map.on("click", function(e){
 
