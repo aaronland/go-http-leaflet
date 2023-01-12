@@ -96,12 +96,30 @@
      		}));
 	}
 
-	
-	map.on("click", function(e){
+     // https://github.com/geoman-io/leaflet-geoman/
+     
+     if (enable_draw == "true"){
 
+	var dump_featurecollection = function(fc){
+	    console.log(fc);
+	};
+	 
+	 map.pm.addControls({  
+	     position: 'topleft',  
+	 });
+
+	 map.on("pm:drawend", function(e){
+	     var feature_group = map.pm.getGeomanLayers(true);
+	     var feature_collection = feature_group.toGeoJSON();
+	     dump_featurecollection(feature_collection);	     
+	 });	 
+     }
+     
+     map.on("click", function(e){
+	 
 	 var ll = e.latlng;
 	 var zoom = map.getZoom();
-
+	 
 	 var coords = map.project(ll, zoom).divideBy(256).floor();
 	 coords.z = zoom;
 
