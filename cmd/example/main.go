@@ -69,6 +69,8 @@ func main() {
 
 	leaflet_opts := leaflet.DefaultLeafletOptions()
 
+	leaflet_opts.AppendJavaScriptAtEOF = true
+
 	if *enable_hash {
 		leaflet_opts.EnableHash()
 	}

@@ -72,7 +72,8 @@
 	</div>
     </body>
     <script>
-     
+     window.addEventListener("load", function load(event){
+	 
 	var layer;
 
 	var enable_hash = document.body.getAttribute("data-enable-hash");
@@ -219,7 +220,7 @@
 	 set_layer(tile_url);
      }
 	 
-     
+    });	 
     </script>
 </html>
 {{ end }}
