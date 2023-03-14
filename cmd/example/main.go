@@ -4,11 +4,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/aaronland/go-http-leaflet"
-	"github.com/aaronland/go-http-leaflet/templates/html"
 	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/aaronland/go-http-leaflet"
+	"github.com/aaronland/go-http-leaflet/templates/html"
 )
 
 type ExampleVars struct {
@@ -51,7 +52,12 @@ func main() {
 	enable_fullscreen := flag.Bool("enable-fullscreen", false, "Enable the Leaflet Fullscreen plugin")
 	enable_draw := flag.Bool("enable-draw", false, "Enable the Leaflet Draw plugin")
 
+	js_eof := flag.Bool("javascript-at-eof", false, "A boolean flag to include JavaScript resources (<script> tags) at the end of HTML output.")
+	rollup_assets := flag.Bool("rollup-assets", false, "Rollup (minify and bundle) JavaScript and CSS assets.")
+
 	flag.Parse()
+
+	logger := log.Default()
 
 	t, err := template.ParseFS(html.FS, "*.html")
 
@@ -61,15 +67,11 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	err = leaflet.AppendAssetHandlers(mux)
-
-	if err != nil {
-		log.Fatalf("Failed to append Leaflet assets handler, %v", err)
-	}
-
 	leaflet_opts := leaflet.DefaultLeafletOptions()
 
-	leaflet_opts.AppendJavaScriptAtEOF = true
+	leaflet_opts.AppendJavaScriptAtEOF = *js_eof
+	leaflet_opts.RollupAssets = *rollup_assets
+	leaflet_opts.Logger = logger
 
 	if *enable_hash {
 		leaflet_opts.EnableHash()
@@ -81,6 +83,12 @@ func main() {
 
 	if *enable_draw {
 		leaflet_opts.EnableDraw()
+	}
+
+	err = leaflet.AppendAssetHandlers(mux, leaflet_opts)
+
+	if err != nil {
+		logger.Fatalf("Failed to append Leaflet assets handler, %v", err)
 	}
 
 	example_vars := &ExampleVars{
