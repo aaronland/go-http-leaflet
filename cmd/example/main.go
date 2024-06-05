@@ -57,8 +57,6 @@ func main() {
 
 	flag.Parse()
 
-	logger := log.Default()
-
 	t, err := template.ParseFS(html.FS, "*.html")
 
 	if err != nil {
@@ -71,7 +69,6 @@ func main() {
 
 	leaflet_opts.AppendJavaScriptAtEOF = *js_eof
 	leaflet_opts.RollupAssets = *rollup_assets
-	leaflet_opts.Logger = logger
 
 	if *enable_hash {
 		leaflet_opts.EnableHash()
@@ -88,7 +85,7 @@ func main() {
 	err = leaflet.AppendAssetHandlers(mux, leaflet_opts)
 
 	if err != nil {
-		logger.Fatalf("Failed to append Leaflet assets handler, %v", err)
+		log.Fatalf("Failed to append Leaflet assets handler, %v", err)
 	}
 
 	example_vars := &ExampleVars{
