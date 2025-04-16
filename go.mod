@@ -1,6 +1,7 @@
 module github.com/aaronland/go-http-leaflet
 
 go 1.22.4
+toolchain go1.24.1
 
 require (
 	github.com/aaronland/go-http-static v0.0.3
@@ -11,5 +12,5 @@ require (
 	github.com/aaronland/go-http-rewrite v1.1.0 // indirect
 	github.com/tdewolff/minify/v2 v2.20.32 // indirect
 	github.com/tdewolff/parse/v2 v2.7.14 // indirect
-	golang.org/x/net v0.8.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
 )
