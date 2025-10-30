@@ -1,15 +1,11 @@
 module github.com/aaronland/go-http-leaflet
 
-go 1.22.4
+go 1.25.0
+
+require github.com/aaronland/go-http/v3 v3.2.0
 
 require (
-	github.com/aaronland/go-http-static v0.0.3
-	github.com/sfomuseum/go-http-rollup v0.0.3
-)
-
-require (
-	github.com/aaronland/go-http-rewrite v1.1.0 // indirect
-	github.com/tdewolff/minify/v2 v2.20.32 // indirect
-	github.com/tdewolff/parse/v2 v2.7.14 // indirect
-	golang.org/x/net v0.8.0 // indirect
+	github.com/tdewolff/minify/v2 v2.24.2 // indirect
+	github.com/tdewolff/parse/v2 v2.8.3 // indirect
+	golang.org/x/net v0.43.0 // indirect
 )
