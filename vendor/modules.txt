@@ -15,7 +15,7 @@ github.com/tdewolff/parse/v2/buffer
 github.com/tdewolff/parse/v2/css
 github.com/tdewolff/parse/v2/js
 github.com/tdewolff/parse/v2/strconv
-# golang.org/x/net v0.43.0
-## explicit; go 1.23.0
+# golang.org/x/net v0.55.0
+## explicit; go 1.25.0
 golang.org/x/net/html
 golang.org/x/net/html/atom
